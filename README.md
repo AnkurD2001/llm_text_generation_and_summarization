@@ -2,119 +2,27 @@
 
 ## About the Project
 
-This project demonstrates how to interact with a Large Language Model (LLM) using the OpenAI-compatible Python SDK. It showcases three fundamental Natural Language Processing (NLP) tasks:
+This project demonstrates how to interact with a Large Language Model (LLM) using an OpenAI-compatible Python SDK.
 
-- Text Generation
-- Output Customization using model parameters
-- Keyword Extraction (Text Summarization)
+The project covers three important Natural Language Processing (NLP) tasks:
 
-The notebook walks through configuring an API client, generating text from prompts, controlling the model's creativity using parameters, and extracting keywords from long passages using prompt engineering and few-shot learning.
+- **Text Generation**
+- **Output Customization using LLM Parameters**
+- **Text Summarization through Keyword Extraction**
+
+The notebook demonstrates how prompt engineering, temperature control, and few-shot prompting can influence the behavior of an LLM.
 
 ---
 
 # Project Overview
 
-The notebook is organized into the following sections:
+The project follows the complete lifecycle of an LLM application:
 
-### 1. API Configuration
-- Import required libraries.
-- Store API credentials securely using environment variables.
-- Initialize the OpenAI-compatible client.
-
-### 2. Text Generation
-Generate text from a user prompt using a chat completion model.
-
-Example:
-
-**Prompt**
-
-```text
-Once upon a time
-```
-
-**Output**
-
-```text
-...in a kingdom tucked between the folds of two shimmering mountains, there lived a clockmaker named Elias...
-```
-
----
-
-### 3. Customizing the Output
-
-This section demonstrates how model parameters affect the generated response.
-
-Parameters used:
-
-- `max_tokens`
-- `temperature`
-
-Examples:
-
-### Temperature = 0
-
-Produces more deterministic and predictable output.
-
-```python
-generate_text(prompt, 50, 0)
-```
-
-Example Output
-
-```text
-Okay, the user just said "Once upon a time" and nothing else...
-```
-
----
-
-### Temperature = 1
-
-Produces more creative responses.
-
-```python
-generate_text(prompt, 50, 1)
-```
-
-Example Output
-
-```text
-Model returned empty response
-```
-
-> **Note:** Depending on the selected LLM provider and model, highly creative settings may occasionally return empty responses or truncated outputs.
-
----
-
-### 4. Text Summarization (Keyword Extraction)
-
-Instead of generating free-form summaries, the model is instructed to extract the most important keywords from a block of text.
-
-The implementation uses:
-
-- System Prompt
-- Few-shot Prompting
-- Chat Completion API
-
-Example Input
-
-```text
-Master Reef Guide Kirsty Whitman didn't need to tell me twice...
-```
-
-Example Output
-
-```text
-Master Reef Guide,
-Kirsty Whitman,
-snorkel mask,
-manta ray,
-male manta ray,
-female manta ray,
-mating behavior,
-potential mate,
-undersea ballet,
-reef ecosystem.
-```
+1. Configure the API connection.
+2. Send prompts to an LLM.
+3. Generate text responses.
+4. Control creativity and response length.
+5. Extract important keywords from documents using few-shot prompting.
 
 ---
 
@@ -122,62 +30,65 @@ reef ecosystem.
 
 - Python
 - OpenAI Python SDK
-- OpenAI-compatible API
+- OpenAI-Compatible API
+- Large Language Models (LLMs)
 - Prompt Engineering
-- Few-shot Learning
+- Few-Shot Learning
+- Natural Language Processing (NLP)
 - Environment Variables
 
 ---
 
 # Project Workflow
 
-```text
+```
 +------------------------------------------+
-|        START: Initialize Project         |
-+------------------------------------------+
-                    |
-                    v
-+------------------------------------------+
-| Cell 1 & 2: Import Libraries             |
-| (OpenAI SDK, OS Module)                  |
+|          START: Initialize Project       |
 +------------------------------------------+
                     |
                     v
 +------------------------------------------+
-| Cell 3: Configure API                    |
+| Step 1: Import Required Libraries        |
+| - OpenAI SDK                             |
+| - OS Module                              |
++------------------------------------------+
+                    |
+                    v
++------------------------------------------+
+| Step 2: Configure API                    |
 | - Store API Key                          |
-| - Retrieve Environment Variable          |
-| - Initialize OpenAI Client               |
+| - Retrieve API Key                       |
+| - Initialize LLM Client                  |
 +------------------------------------------+
                     |
                     v
 +------------------------------------------+
-| Cell 4: Generate Text                    |
-| - User Prompt                            |
-| - Chat Completion API                    |
-| - Display Generated Text                 |
+| Step 3: Text Generation                  |
+| - Provide User Prompt                    |
+| - Send Request to LLM                    |
+| - Generate Response                      |
 +------------------------------------------+
                     |
                     v
 +------------------------------------------+
-| Cell 5: Customize Output                 |
-| - Adjust max_tokens                      |
+| Step 4: Customize Output                 |
+| - Change max_tokens                      |
 | - Adjust temperature                     |
-| - Compare Generated Results              |
+| - Compare Different Outputs              |
 +------------------------------------------+
                     |
                     v
 +------------------------------------------+
-| Cell 6: Text Summarization               |
-| - System Prompt                          |
+| Step 5: Text Summarization               |
+| - System Instructions                    |
 | - Few-shot Examples                      |
 | - Extract Keywords                       |
 +------------------------------------------+
                     |
                     v
 +------------------------------------------+
-|           OUTPUT: Keywords               |
-|      or Generated Text Response          |
+|              FINAL OUTPUT                |
+| Generated Text / Extracted Keywords      |
 +------------------------------------------+
                     |
                     v
@@ -188,13 +99,11 @@ reef ecosystem.
 
 ---
 
-# Notebook Structure
+# API Configuration
 
-## Cell 1 — Import Libraries
+## Import Libraries
 
-**Explanation**
-
-Imports the required libraries for communicating with the language model.
+The project starts by importing the required libraries.
 
 ```python
 from openai import OpenAI
@@ -203,27 +112,23 @@ import os
 
 ---
 
-## Cell 2 — Configure Environment
+## Configure API Key
 
-**Explanation**
-
-Stores the API key securely using an environment variable.
+The API key is stored using environment variables instead of directly writing credentials inside the code.
 
 ```python
 os.environ["Your_llm_model_API_KEY"] = "<Your_API_Key>"
 ```
 
----
-
-## Cell 3 — Initialize Client
-
-**Explanation**
-
-Retrieves the API key and initializes the OpenAI-compatible client.
+Retrieve the API key:
 
 ```python
 api_key = os.getenv("Your_llm_model_API_KEY")
+```
 
+Initialize the client:
+
+```python
 client = OpenAI(
     base_url="https://Your_llm_model_API_KEY/api/",
     api_key=api_key
@@ -232,89 +137,209 @@ client = OpenAI(
 
 ---
 
-## Cell 4 — Text Generation
+# 1. Text Generation
 
-**Explanation**
+## Description
 
-Defines a function that sends a user prompt to the language model and returns generated text.
+The text generation function sends a user prompt to the LLM and returns the generated response.
+
+## Function
 
 ```python
 def generate_text(prompt):
-```
 
-The function allows users to generate text from any prompt.
+    response = client.chat.completions.create(
+        model="Your_llm_model",
+
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+
+        max_tokens=100,
+        temperature=0.7
+    )
+
+    content = response.choices[0].message.content
+
+    if content:
+        return content.strip()
+
+    return "No response generated"
+```
 
 ---
 
-## Cell 5 — Customizing Output
+## Example
 
-**Explanation**
+Input:
 
-This version of the function exposes two configurable parameters:
+```python
+prompt = "Once upon a time"
 
-- `max_tokens`
-- `temperature`
+generated_text = generate_text(prompt)
+
+print(generated_text)
+```
+
+Output:
+
+```text
+...in a kingdom tucked between the folds of two shimmering mountains,
+there lived a clockmaker named Elias who didn't build clocks to tell the time.
+Instead, he built clocks that captured moments.
+```
+
+---
+
+# 2. Customizing the Output
+
+## Description
+
+LLM responses can be controlled by modifying generation parameters.
+
+The two important parameters are:
+
+### max_tokens
+
+Controls the maximum length of the response.
+
+### temperature
+
+Controls creativity:
+
+- Lower temperature → More predictable output
+- Higher temperature → More creative output
+
+---
+
+## Function
 
 ```python
 def generate_text(prompt, max_tokens, temperature):
-```
 
-This demonstrates how output length and creativity can be controlled.
+    response = client.chat.completions.create(
+
+        model="Your_llm_model",
+
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+
+        max_tokens=max_tokens,
+        temperature=temperature
+    )
+
+
+    content = response.choices[0].message.content
+
+    if content:
+        return content.strip()
+
+    return "Model returned empty response"
+```
 
 ---
 
-## Cell 6 — Text Summarization
+## Testing Different Temperatures
 
-**Explanation**
+### Temperature = 0
 
-Uses prompt engineering and few-shot examples to teach the model how to extract keywords from lengthy documents.
+```python
+generate_text(prompt, 50, 0)
+```
 
-The workflow includes:
+Example:
+
+```text
+Okay, the user just said "Once upon a time" and nothing else.
+```
+
+---
+
+### Temperature = 1
+
+```python
+generate_text(prompt, 50, 1)
+```
+
+Example:
+
+```text
+Model returned empty response
+```
+
+Different LLM providers may produce different results depending on model configuration.
+
+---
+
+# 3. Text Summarization (Keyword Extraction)
+
+## Description
+
+This project uses the LLM to extract important keywords from a long text passage.
+
+The model receives:
 
 - System instruction
-- Demonstration examples
-- User input
-- Keyword extraction
+- Few-shot examples
+- User text
+
+This teaches the model the expected output format.
 
 ---
 
-# Key Features
+## Function
 
-- Secure API configuration
-- Text generation using chat completions
-- Configurable creativity through temperature
-- Adjustable response length
-- Few-shot prompting
-- Keyword extraction from long documents
-- Prompt engineering techniques
+```python
+def text_summarizer(prompt):
 
----
+    response = client.chat.completions.create(
 
-# Sample Results
+        model="Your_llm_model",
 
-### Text Generation
+        messages=[
 
-**Prompt**
+            {
+                "role": "system",
+                "content":
+                "You will be provided with a block of text, "
+                "and your task is to extract a list of keywords from it."
+            },
 
-```text
-Once upon a time
+
+            {
+                "role": "user",
+                "content": prompt
+            }
+
+        ],
+
+        temperature=0.5,
+        max_tokens=256
+    )
+
+
+    return response.choices[0].message.content.strip()
 ```
 
-**Generated Output**
-
-```text
-...in a kingdom tucked between the folds of two shimmering mountains...
-```
-
 ---
 
-### Keyword Extraction
+## Example
 
-**Input**
+Input:
 
-Long article describing manta rays and reef exploration.
+```text
+Master Reef Guide Kirsty Whitman didn't need to tell me twice.
+Peering down through my snorkel mask...
+```
 
-**Output**
+Output:
 
 ```text
 Master Reef Guide,
@@ -325,6 +350,101 @@ male manta ray,
 female manta ray,
 mating behavior,
 potential mate,
+snorkelling safari,
+undersea ballet,
+reef ecosystem.
+```
+
+---
+
+# Prompt Engineering Approach
+
+This project uses:
+
+## System Prompt
+
+Defines the task.
+
+Example:
+
+```text
+Extract important keywords from the provided text.
+```
+
+---
+
+## Few-Shot Prompting
+
+Examples are provided to show the model the expected response format.
+
+Example:
+
+Input:
+
+```text
+Article text
+```
+
+Expected output:
+
+```text
+keyword1, keyword2, keyword3
+```
+
+The model learns the required format before processing new input.
+
+---
+
+# Repository Structure
+
+```
+LLM-Text-Generation-and-Summarization/
+
+│
+├── LLM_Text_Generation_and_Summarization.ipynb
+│
+├── README.md
+│
+├── requirements.txt
+│
+└── .gitignore
+```
+
+# Sample Results
+
+## Generated Text
+
+Prompt:
+
+```text
+Once upon a time
+```
+
+Generated:
+
+```text
+...in a kingdom tucked between two shimmering mountains,
+there lived a clockmaker named Elias...
+```
+
+---
+
+## Extracted Keywords
+
+Input:
+
+```text
+Article describing manta rays and marine exploration.
+```
+
+Output:
+
+```text
+Kirsty Whitman,
+manta ray,
+snorkel mask,
+mating behavior,
+potential mate,
 undersea ballet,
 reef ecosystem.
 ```
@@ -333,4 +453,14 @@ reef ecosystem.
 
 # Conclusion
 
-This project demonstrates the practical use of an OpenAI-compatible Large Language Model for multiple NLP tasks. It illustrates how prompt engineering and adjustable generation parameters influence model behavior, while also showcasing keyword extraction through few-shot learning. These examples provide a solid foundation for building more advanced AI-powered applications such as document analysis, summarization tools, chat assistants, and content generation systems.
+This project demonstrates how Large Language Models can be used for different NLP applications.
+
+By controlling prompts and generation parameters, the same LLM can perform creative text generation and structured information extraction.
+
+The project provides a foundation for building advanced AI applications such as:
+
+- Document summarization systems
+- AI assistants
+- Content generation tools
+- Knowledge extraction pipelines
+- Retrieval-Augmented Generation (RAG) applications
